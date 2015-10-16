@@ -5,8 +5,9 @@
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
+ * @author		EllisLab Dev Team
+ * @copyright		Copyright (c) 2008 - 2014, EllisLab, Inc.
+ * @copyright		Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -21,7 +22,7 @@
  * @package		CodeIgniter
  * @subpackage	Helpers
  * @category	Helpers
- * @author		ExpressionEngine Dev Team
+ * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/helpers/form_helper.html
  */
 
@@ -144,7 +145,7 @@ if ( ! function_exists('form_hidden'))
 
 		if ( ! is_array($value))
 		{
-			$form .= '<input type="hidden" name="'.$name.'" id="' . $name . '" value="'.form_prep($value, $name).'" />'."\n";
+			$form .= '<input type="hidden" name="'.$name.'" value="'.form_prep($value, $name).'" />'."\n";
 		}
 		else
 		{
@@ -174,28 +175,7 @@ if ( ! function_exists('form_input'))
 {
 	function form_input($data = '', $value = '', $extra = '')
 	{
-		$defaults = array('type' => 'text', 'name' => (( ! is_array($data)) ? $data : ''), 'id' => (( ! is_array($data)) ? $data : ''), 'value' => $value);
-
-		return "<input "._parse_form_attributes($data, $defaults).$extra." />";
-	}
-}
-
-// ------------------------------------------------------------------------
-
-/**
- * Date Input Field
- *
- * @access	public
- * @param	mixed
- * @param	string
- * @param	string
- * @return	string
- */
-if ( ! function_exists('form_date'))
-{
-	function form_date($data = '', $value = '', $extra = '')
-	{
-		$defaults = array('type' => 'date', 'name' => (( ! is_array($data)) ? $data : ''), 'id' => (( ! is_array($data)) ? $data : ''), 'value' => $value);
+		$defaults = array('type' => 'text', 'name' => (( ! is_array($data)) ? $data : ''), 'value' => $value);
 
 		return "<input "._parse_form_attributes($data, $defaults).$extra." />";
 	}
@@ -220,7 +200,7 @@ if ( ! function_exists('form_password'))
 	{
 		if ( ! is_array($data))
 		{
-			$data = array('name' => $data, 'id' => $data);
+			$data = array('name' => $data);
 		}
 
 		$data['type'] = 'password';
@@ -247,7 +227,7 @@ if ( ! function_exists('form_upload'))
 	{
 		if ( ! is_array($data))
 		{
-			$data = array('name' => $data, 'id' => $data);
+			$data = array('name' => $data);
 		}
 
 		$data['type'] = 'file';
@@ -270,7 +250,7 @@ if ( ! function_exists('form_textarea'))
 {
 	function form_textarea($data = '', $value = '', $extra = '')
 	{
-		$defaults = array('name' => (( ! is_array($data)) ? $data : ''), 'id' => (( ! is_array($data)) ? $data : ''), 'cols' => '40', 'rows' => '10');
+		$defaults = array('name' => (( ! is_array($data)) ? $data : ''), 'cols' => '40', 'rows' => '10');
 
 		if ( ! is_array($data) OR ! isset($data['value']))
 		{
@@ -347,30 +327,24 @@ if ( ! function_exists('form_dropdown'))
 
 		$multiple = (count($selected) > 1 && strpos($extra, 'multiple') === FALSE) ? ' multiple="multiple"' : '';
 
-		$form = '<select name="'.$name.'" id="' . $name . '"'.$extra.$multiple.">\n";
+		$form = '<select name="'.$name.'"'.$extra.$multiple.">\n";
 
 		foreach ($options as $key => $val)
 		{
-			if($name != 'id_parent') {
-				$key = (string) $key;
-				$key = $key + 1;
-			}
+			$key = (string) $key;
 
 			if (is_array($val) && ! empty($val))
 			{
-				if($name != 'author') {
-					$form .= '<optgroup label="'.$key.'">'."\n";
+				$form .= '<optgroup label="'.$key.'">'."\n";
+
+				foreach ($val as $optgroup_key => $optgroup_val)
+				{
+					$sel = (in_array($optgroup_key, $selected)) ? ' selected="selected"' : '';
+
+					$form .= '<option value="'.$optgroup_key.'"'.$sel.'>'.(string) $optgroup_val."</option>\n";
 				}
 
-					foreach ($val as $optgroup_key => $optgroup_val)
-					{
-						$sel = (in_array($key, $selected)) ? ' selected="selected"' : '';
-						$form .= '<option value="'.$key.'"'.$sel.'>'.(string) $optgroup_val."</option>\n";
-					}
-
-				if($name != 'author') {
-					$form .= '</optgroup>'."\n";
-				}
+				$form .= '</optgroup>'."\n";
 			}
 			else
 			{
@@ -402,7 +376,7 @@ if ( ! function_exists('form_checkbox'))
 {
 	function form_checkbox($data = '', $value = '', $checked = FALSE, $extra = '')
 	{
-		$defaults = array('type' => 'checkbox', 'name' => (( ! is_array($data)) ? $data : ''), 'id' => (( ! is_array($data)) ? $data : ''), 'value' => $value);
+		$defaults = array('type' => 'checkbox', 'name' => (( ! is_array($data)) ? $data : ''), 'value' => $value);
 
 		if (is_array($data) AND array_key_exists('checked', $data))
 		{

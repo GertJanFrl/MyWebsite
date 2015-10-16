@@ -82,4 +82,63 @@ $(document).ready(function() {
         },
         language: 'nl'
     });
+
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+            $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $('.sortable').sortable({
+        helper: fixHelper,
+        axis: 'y',
+        cancel: '.disabled',
+        update: function (event, ui) {
+            var pageOrder = '';
+            $('.sortable tr').not('.child').each(function(i) {
+                if (pageOrder == '')
+                    pageOrder = $(this).data('id');
+                else
+                    pageOrder += ',' + $(this).data('id');
+            });
+
+            $.post('/_admin/page/ajax', { order: pageOrder });
+            // .success(function(data) {
+            //     alert('saved');
+            // })
+            // .error(function(data) { 
+            //     alert('Error: ' + JSON.stringify(data)); 
+            // }); 
+
+            $('#sortState').addClass('updated');
+        }
+    }).disableSelection();
+
+    $('#sortState').click(function() {
+        if($(this).hasClass('updated')) {
+            location.reload();
+        }
+        if ($(this).hasClass('enabled')) {
+            $(this).removeClass('enabled');
+            $(this).html('<a><i class="fa fa-sort"></i> Sorteren uitschakelen</a>');
+            $('table.table.table-sort tbody').removeClass('disabled');
+            $('.table-sort tbody tr.child').css('display', 'none');
+        } else { 
+            $(this).addClass('enabled');
+            $(this).html('<a><i class="fa fa-sort"></i> Sorteren inschakelen</a>');
+            $('.table-sort tbody').addClass('disabled');
+            $('.table-sort tbody tr.child').css('display', 'table-row');
+        }
+    });
+
+    $("#id_parent").change(function () {
+        $( "#id_parent option:selected" ).each(function() {
+            if ($(this).val() > 0) {
+                $('#page form').attr('action', '/_admin/page/sub');
+            } else {
+                $('#page form').attr('action', '/_admin/page/edit');
+            }
+        });
+    }).change();
 });

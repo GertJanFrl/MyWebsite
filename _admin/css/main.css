@@ -66,6 +66,8 @@ div#page                                                       {transition: left
 div#page.nav-expanded                                          {left:180px; padding: 15px 0 0;}
 div#page.nav-narrow                                            {left:0; }
 
+div#page table tbody.disabled td.icon-sort                     {font-size: 0px;}
+
 div#page .block                                                {position: relative; min-width: 255px; border: 1px solid #E5E5E5; -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); background: #FFF; margin-bottom: 20px;}
 div#page .block h3.title                                       {margin: 0; border-bottom: 1px solid #EEE; font-weight: bold; color: #222;}
 div#page .block h3.title span                                  {font-size: 15px; padding: 8px 12px; margin: 0; line-height: 1.4; display: block;}
