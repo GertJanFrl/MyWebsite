@@ -7,12 +7,12 @@ class Article_m extends MY_Model {
 		'pubdate' => array(
 			'field' => 'pubdate', 
 			'label' => 'Publicatie datum', 
-			'rules' => 'trim|required|xss_clean'
+			'rules' => 'trim|required'
 		), 
 		'title' => array(
 			'field' => 'title', 
 			'label' => 'Titel', 
-			'rules' => 'trim|required|max_length[100]|xss_clean'
+			'rules' => 'trim|required|max_length[100]'
 		)
 	);
 
@@ -27,6 +27,16 @@ class Article_m extends MY_Model {
 	
 	public function set_published() {
 		$this->db->where('pubdate <=', date('Y-m-d H:i'));
+	}
+
+	public function get_trash ($id = NULL, $single = FALSE) {
+		$this->db->where('active', '0');
+		return parent::get($id, $single);
+	}
+
+	public function get_active ($id = NULL, $single = FALSE) {
+		$this->db->where('active', '1');
+		return parent::get($id, $single);
 	}
 	
 	public function get_recent($limit = 3) {

@@ -15,6 +15,7 @@ class Page extends Admin_Controller
 							'active' => '1', 
 						);
 				$this->page_m->save($data, $restore_id);
+				$this->system_m->log_event('page', $restore_id, 'restore');
 				redirect('page/');
 				// $this->data['restored'] = 'true';
 			}
@@ -47,6 +48,7 @@ class Page extends Admin_Controller
 		if($id) {
 			if($delete == "page") {
 				$this->page_m->delete($id);
+				$this->system_m->log_event('page', $id, 'delete');
 				redirect('page/trash/');
 			} else if($delete == "sub") {
 				$this->page_m->delete($id, 'sub');
@@ -56,6 +58,7 @@ class Page extends Admin_Controller
 						'active' => '0', 
 					);
 			$this->page_m->save($data, $id);
+			$this->system_m->log_event('page', $id, 'trash');
 			redirect('page/trash/');
 		}
 
@@ -96,49 +99,44 @@ class Page extends Admin_Controller
 		
 		// Process the form
 		if ($this->form_validation->run() == TRUE) {
+			($_POST['navigation_visible'] == 'NULL' || !isset($_POST['navigation_visible']) ? $_POST['navigation_visible'] = '0' : $_POST['navigation_visible'] = '1');
             if(!empty($_POST['id_parent']) && isset($_POST['id_parent'])) {
                 $data = $this->page_m->array_from_post(array(
                     'title', 
                     'body',
-                    'body_sidebar',
-                    'meta_title', 
+                    'meta_title',
                     'meta_description',
                     'id_parent',
                 ));
-                $id = $this->page_m->save($data, $id, 'sub');
+                $save = $this->page_m->save($data, $id, 'sub');
             } else {
                 $data = $this->page_m->array_from_post(array(
                     'title', 
                     'body',
-                    'body_sidebar',
-                    'meta_title', 
+                    'meta_title',
                     'meta_description',
                     'navigation_visible',
                 ));
-                $id = $this->page_m->save($data, $id);
+                $save = $this->page_m->save($data, $id);
             }
 
 			if(!empty($_FILES['thumbnail']['name'])) {
                 if(file_exists($_SERVER['DOCUMENT_ROOT'] . "/img/uploads/page/" . $this->data['thumbnail'])) {
-                    unlink($_SERVER['DOCUMENT_ROOT'] . "/img/uploads/page/" . $this->data['thumbnail']);
+//                    unlink($_SERVER['DOCUMENT_ROOT'] . "/img/uploads/page/" . $this->data['thumbnail']);
+					deleteThumbCache('page/' . $this->data['thumbnail'], dirtitel($_POST['title']));
                 }
 
 				$thumbnail = dirtitel($_POST['title']) . "." . pathinfo($_FILES['thumbnail']['name'], PATHINFO_EXTENSION);
 				move_uploaded_file($_FILES["thumbnail"]["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . "/img/uploads/page/" . $thumbnail);
-                $this->page_m->save_thumbnail($thumbnail, $id);
-
-                // $smush = new SmushIt;
-                // $smush->base = 'http://cms.gertlily.com'; // ( Must be accessible for the Smush It api )
-                // if( !$smush->smush('/img/uploads/page/' . $thumbnail, $_SERVER['DOCUMENT_ROOT'] . "/img/uploads/page/" . $thumbnail) ) {
-                //     echo 'Error: <br />';
-                //     echo $smush->msg;
-                // } else {
-                //     echo $smush->msg;
-                //     echo 'saved: ' . $smush->savings . 'kb (' . $smush->savings_perc . '%)';
-                // }
-                // die();
+                $this->page_m->save_thumbnail($thumbnail, $save, (!empty($_POST['id_parent']) && isset($_POST['id_parent']) ? 'sub' : ''));
 			}
-			redirect('page/edit/' . $id . '/success');
+
+			if ($id)
+				$this->system_m->log_event('page', $id, 'edit');
+			else
+				$this->system_m->log_event('page', $save, 'add');
+
+			redirect('page/edit/' . $save . '/success');
 		}
 		
 		// Load the view

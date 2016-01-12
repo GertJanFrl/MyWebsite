@@ -28,8 +28,15 @@ else {
     $file = $_GET['file'];
 }
 
+$fileNamePath = pathinfo($file, PATHINFO_FILENAME);
+$fileNameExtension = pathinfo($file, PATHINFO_EXTENSION);
+
 $original = $_SERVER['DOCUMENT_ROOT'] . '/img/' . (!empty($path) ? $path . '/' : '') . $file ;
-$target = $_SERVER['DOCUMENT_ROOT'] . '/img/cache/' . $thumbWidth . '-' . $thumbHeight . '-' . $file;
+$target = $_SERVER['DOCUMENT_ROOT'] . '/img/cache/' . $fileNamePath . '/' . $thumbWidth . '-' . $thumbHeight . '.' . $fileNameExtension;
+
+if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/img/cache/' . $fileNamePath)) {
+  mkdir($_SERVER['DOCUMENT_ROOT'] . '/img/cache/' . $fileNamePath, 0777, true);
+}
 
 // Check the filename is safe & check file type
 if (preg_match('#^[a-z0-9\.\-]+(@2x)?\.(jpg|jpeg|png)$#i', $file, $matches) && strpos($file, '..') === false) {

@@ -13,12 +13,12 @@ class Dashboard extends Admin_Controller {
         $this->load->model('page_m');
         $this->load->model('user_m');
         $this->load->model('system_m');
-    	$this->db->limit(1);
+
         $this->data['count_articles'] = $this->article_m->get();
         $this->data['count_pages'] = $this->page_m->get();
         $this->data['count_pages_sub'] = $this->page_m->get('', '', true);
     	$this->data['count_users'] = $this->user_m->get();
-        $this->data['last_page'] = $this->article_m->get();
+
         $this->db->limit(5);
         $this->data['articles'] = $this->article_m->get();
         $this->data['system']['supportwidget_openingstijden']   = $this->system_m->get_value('supportwidget_openingstijden')[0]['value'];

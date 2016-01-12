@@ -34,6 +34,12 @@ class Diensten extends Frontend_Controller {
         } else {
             $this->output->set_status_header('404');
 
+            // Sidebar nieuwsberichten
+            $this->db->limit(5);
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('active', '1');
+            $this->data['articles'] = $this->article_m->get();
+
             add_meta_title('Pagina niet gevonden', '');
             add_meta_description('Pagina niet gevonden');
             
@@ -94,6 +100,12 @@ class Diensten extends Frontend_Controller {
             $this->load->view('_main_layout', $this->data);
         } else {
             $this->output->set_status_header('404');
+
+            // Sidebar nieuwsberichten
+            $this->db->limit(5);
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('active', '1');
+            $this->data['articles'] = $this->article_m->get();
 
             add_meta_title('Pagina niet gevonden', '');
             add_meta_description('Pagina niet gevonden');

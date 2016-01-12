@@ -46,12 +46,12 @@
 */
 
 $active_group = 'default';
-$active_record = TRUE;
+$query_builder = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'mywebsite';
+$db['default']['username'] = 'client_mywebsite';
 $db['default']['password'] = 'password';
-$db['default']['database'] = 'mywebsite';
+$db['default']['database'] = 'client_mywebsite';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = FALSE;

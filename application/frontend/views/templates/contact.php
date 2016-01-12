@@ -1,12 +1,11 @@
 <?php $this->load->helper('form'); ?>
-        <div id="map-canvas" style="height: 330px;"></div>
 
-        <div id="content" class="carousel-visible">
+        <div id="content">
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-sm-8">
                         <?php
-                        if($this->session->flashdata('success') !== FALSE) {
+                        if($this->session->flashdata('success')) {
                             echo '<div class="block alert alert-default">Uw vraag of opmerking is succesvol verzonden, wij zullen zo spoedig mogelijk contact met u opnemen.</div>';
                         }
                         if(!empty($post_return)) {
@@ -49,6 +48,70 @@
                     </div>
 
                     <div class="col-md-4 col-sm-4" id="sidebar">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-6 col-sm-12">
+                                <div class="block">
+                                    <h3>Agenda</h3>
+                                    <p>
+                                        Hieronder ziet u de komende 5 agenda punten, voor een volledig overzicht kunt u <a href="/agenda" title="Agenda">hier</a> kijken.
+                                    </p>
+                                    <?php
+                                    $client = new Google_Client();
+                                    $client->setApplicationName("HeiligejacobusparochieCalendar");
+                                    $client->setDeveloperKey('AIzaSyBpW8Jz0gIIdVYflGStfXMqptPjiKB2kCQ');
+                                    $cal = new Google_Service_Calendar($client);
+                                    $calendarId = 'jacobmeerdere@gmail.com';
+                                    $params = array(
+                                        'singleEvents' => true,
+                                        'orderBy' => 'startTime',
+                                        'timeMin' => date(DateTime::ATOM),
+                                        'maxResults' => 5
+
+                                    );
+                                    $events = $cal->events->listEvents($calendarId, $params);
+                                    $calTimeZone = $events->timeZone;
+                                    date_default_timezone_set($calTimeZone);
+                                    foreach ($events->getItems() as $event):
+                                        $eventDateStr = $event->start->dateTime;
+                                        if(empty($eventDateStr))
+                                        {
+                                            $eventDateStr = $event->start->date;
+                                        }
+                                        $temp_timezone = $event->start->timeZone;
+                                        if (!empty($temp_timezone))
+                                        {
+                                            $timezone = new DateTimeZone($temp_timezone);
+                                        }
+                                        else
+                                        {
+                                            $timezone = new DateTimeZone($calTimeZone);
+                                        }
+                                        $eventdate = new DateTime($eventDateStr,$timezone);
+                                        $link = $event->htmlLink;
+                                        $TZlink = $link . "&ctz=" . $calTimeZone;
+                                        $newmonth = $eventdate->format("M");
+                                        $newday = $eventdate->format("j");
+                                        $time_start = $eventdate->format("H:i");
+                                        ?>
+                                        <div class="event-container">
+                                            <div class="eventDate">
+                                                <span class="month"><?php echo $newmonth; ?></span> <br />
+                                                <span class="day"><?php echo $newday; ?></span>
+                                                <span class="dayTrail"></span>
+                                            </div>
+                                            <div class="eventBody">
+                                                <a href="/agenda/<?php echo $event->id; ?>"><?php echo $event->summary; ?></a> <br />
+                                                Locatie: <?php echo $event->location; ?> <br />
+                                                Begintijd: <?php echo $time_start; ?>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    endforeach;
+                                    ?>
+                                    <p><a href="/agenda" class="btn btn-anchor">Bekijk volledig agenda >></a></p>
+                                </div>
+                            </div>
+                        </div>
                         <?php include $_SERVER['DOCUMENT_ROOT'] . '/application/frontend/views/extra/sidebar.php'; ?>
                         <?php if(!empty($page->body_sidebar)) { ?>
                         <div class="block">

@@ -72,6 +72,11 @@ class Page_m extends MY_Model {
         return $this->db->get_where($this->_table_name_sub, array('active' => '1'))->result();
     }
 
+	public function get_children($parent){
+		$parent = (int) $parent;
+		return $this->db->get_where($this->_table_name_sub, array('active' => '1', 'id_parent' => $parent))->result();
+	}
+
 	public function get_no_parents ()
 	{
 		// Fetch pages without parents

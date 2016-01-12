@@ -1,5 +1,5 @@
 <?php echo form_open(); 
-if($this->session->flashdata('success') !== FALSE) { ?>
+if($this->session->flashdata('success')) { ?>
 <div class="row">
 	<div class="col-md-12">
 		<div class="alert alert-success">Uw wijzigen zijn opgeslagen</div>
@@ -17,6 +17,10 @@ if($this->session->flashdata('success') !== FALSE) { ?>
 				<div class="form-group">
 					<?php echo form_label('Website naam: ', 'web_title'); ?>
 					<?php echo form_input('web_title', set_value('web_title', $system['web_title']), 'class="form-control" required'); ?>
+				</div>
+				<div class="form-group">
+					<?php echo form_label('Website slogan: ', 'web_title_slogan'); ?>
+					<?php echo form_input('web_title_slogan', set_value('web_title_slogan', $system['web_title_slogan']), 'class="form-control" required'); ?>
 				</div>
 			</div>
 		</div>

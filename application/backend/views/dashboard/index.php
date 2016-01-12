@@ -75,7 +75,7 @@
 				<?php foreach ($articles as $key => $article) {
 					echo '<p>';
 					echo '<a href="/_admin/article/edit/' . $article->id . '">' . $article->title . '</a><br />';
-					echo '&emsp;door ' . $this->user_m->get_user($article->author)[0]['name'] . ' op ' . $article->pubdate;
+					echo '&emsp;door ' . (!empty($this->user_m->get_user($article->author)) ? $this->user_m->get_user($article->author)[0]['name'] : '<s>onbekend</s>') . ' op ' . $article->pubdate;
 					echo '</p>';
 				}
 				?>

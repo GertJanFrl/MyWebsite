@@ -33,9 +33,11 @@ if(!empty($user->rights) && $user->rights == 3) {
                 <label for="password">Wachtwoord</label> <br />
                 <?php echo form_password('password', '', 'class="form-control"'); ?><br />
                 <br />
+                <?php if (!isset($user->rights) || $user->rights == 3 && $user->id !== $this->session->userdata('id')) { ?>
                 <label for="rights">Rechten niveau</label> <br />
                 <?php echo form_dropdown('rights', $rights_array, (!empty($user->rights) ? $user->rights : '1'), 'class="form-control"'); ?><br />
                 <br />
+                <?php } ?>
                 <div class="row">
                     <?php if(!empty($user->id) && $user->id != 1) { ?>
                     <div class="col-md-6">

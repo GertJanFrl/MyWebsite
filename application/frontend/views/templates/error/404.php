@@ -1,21 +1,9 @@
-        <div id="carousel" class="carousel slide small" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="item active">
-                    <img src="/resize/7000x150/slider/coding.png" alt="">
-                    <div class="container">
-                        <div class="carousel-caption">
-                            <h1>Pagina niet gevonden</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="content" class="carousel-visible">
+        <div id="content">
             <div class="container">
                 <div class="row">
                     <div class="col-md-8">
                         <div class="block">
+                            <h1>Pagina niet gevonden</h1>
                             <p>Helaas hebben wij deze pagina niet voor u kunnen vinden, dit kan de volgende redenen hebben:</p>
                             <ul>
                                 <li>De URL van de pagina is verkeerd</li>
@@ -38,6 +26,18 @@
                             <?php echo $page->body_sidebar; ?>
                         </div>
                         <?php } ?>
+                        <div class="block sidebar">
+                            <h3>Laatste nieuws</h3>
+                            <?php
+                            foreach ($articles as $key => $article):
+                                echo '<div class="news-row"><a href="/nieuws/' . $article->url . '">';
+                                echo '<h5>' . $article->title . '</h5>';
+                                echo '<p>' . substr(strip_tags($article->body), 0, 200) . '</p>';
+                                echo '</a></div>';
+                            endforeach;
+                            ?>
+                            <p><a href="/nieuws" class="btn btn-anchor">Meer nieuws >></a></p>
+                        </div>
                         <?php include $_SERVER['DOCUMENT_ROOT'] . '/application/frontend/views/extra/sidebar.php'; ?>
                     </div>
                 </div>

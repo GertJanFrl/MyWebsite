@@ -7,14 +7,14 @@ class Diensten_m extends MY_Model {
         'tld' => array(
             'field' => 'tld', 
             'label' => 'TLD', 
-            'rules' => 'trim|required|max_length[100]|xss_clean'
+            'rules' => 'trim|required|max_length[100]'
         )
     );
     public $rules_hosting = array(
         'title' => array(
             'field' => 'title', 
             'label' => 'Titel', 
-            'rules' => 'trim|required|max_length[100]|xss_clean'
+            'rules' => 'trim|required|max_length[100]'
         )
     );
 

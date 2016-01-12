@@ -252,15 +252,25 @@ $config['encryption_key'] = 'gh9K*fCsZa2@hBc&hjasLKVfVBNa*%f';
 | 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
-$config['sess_cookie_name']		= 'cisession';
-$config['sess_expiration']		= 7200;
-$config['sess_expire_on_close']	= TRUE;
-$config['sess_encrypt_cookie']	= TRUE;
-$config['sess_use_database']	= TRUE;
-$config['sess_table_name']		= 'gl_user_sessions';
-$config['sess_match_ip']		= FALSE;
-$config['sess_match_useragent']	= TRUE;
-$config['sess_time_to_update']	= 300;
+$config['sess_driver']          = 'database';
+$config['sess_cookie_name']     = 'mywebsite';
+$config['sess_encrypt_cookie']  = TRUE;
+$config['sess_expiration']      = 0;
+$config['sess_expire_on_close'] = FALSE;
+$config['sess_save_path']       = 'gl_user_sessions';//its your table name name
+$config['sess_match_ip']        = FALSE;
+$config['sess_match_useragent'] = FALSE;
+$config['sess_time_to_update']  = 86400;
+
+//$config['sess_cookie_name']		= 'mywebsite';
+//$config['sess_expiration']		= 0;
+//$config['sess_expire_on_close']	= TRUE;
+//$config['sess_encrypt_cookie']	= TRUE;
+//$config['sess_use_database']	= TRUE;
+//$config['sess_table_name']		= 'gl_user_sessions';
+//$config['sess_match_ip']		= FALSE;
+//$config['sess_match_useragent']	= TRUE;
+//$config['sess_time_to_update']	= 1000;
 
 /*
 |--------------------------------------------------------------------------
@@ -287,7 +297,7 @@ $config['cookie_secure']	= FALSE;
 | COOKIE data is encountered
 |
 */
-$config['global_xss_filtering'] = TRUE;
+$config['global_xss_filtering'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -300,7 +310,8 @@ $config['global_xss_filtering'] = TRUE;
 | 'csrf_token_name' = The token name
 | 'csrf_cookie_name' = The cookie name
 | 'csrf_expire' = The number in seconds the token should expire.
-*/if (isset($_SERVER["REQUEST_URI"])) 
+*/
+if (isset($_SERVER["REQUEST_URI"]))
 {
     if(stripos($_SERVER["REQUEST_URI"],'/page/ajax') === FALSE)
     {

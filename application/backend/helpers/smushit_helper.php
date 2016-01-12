@@ -12,7 +12,7 @@
  * Usage:
  *  $smush = new SmushIt;
  *  $smush->base = 'http://www.yourdomain.com'; // ( Must be accessible for the Smush It api )
- *  if( !$smush->smush('assets/img/unsmushed/logo.png','assets/smushed/logo.png') ) {
+ *  if( !$smush->smush('assets/img/unsmushed/h-jacobusparochie-noordwest-friesland.png','assets/smushed/h-jacobusparochie-noordwest-friesland.png') ) {
  *    echo $smush->msg;
  *  } else {
  *    echo 'saved: ' . $smush->savings . 'kb (' . $smush->savings_perc . '%)';

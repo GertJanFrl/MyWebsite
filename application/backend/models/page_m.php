@@ -12,12 +12,12 @@ class Page_m extends MY_Model {
 		'title' => array(
 			'field' => 'title', 
 			'label' => 'Title', 
-			'rules' => 'trim|required|max_length[100]|xss_clean'
+			'rules' => 'trim|required|max_length[100]'
 		), 
 		'body' => array(
 			'field' => 'body', 
 			'label' => 'Body', 
-			'rules' => 'trim'
+			'rules' => ''
 		)
 	);
 
@@ -99,7 +99,7 @@ class Page_m extends MY_Model {
 		return $this->db->get_where($this->_table_name_sub, array('active' => '1'))->result();
 	}
 
-	public function save_thumbnail($thumbnail, $id) {
-        $this->db->update($this->_table_name, array('thumbnail' => $thumbnail), "`id` = '" . $id . "'");
+	public function save_thumbnail($thumbnail, $id, $sub = '') {
+        $this->db->update((!empty($sub) ? $this->_table_name_sub : $this->_table_name), array('thumbnail' => $thumbnail), "`id` = '" . $id . "'");
 	}
 }

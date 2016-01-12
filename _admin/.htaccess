@@ -3,12 +3,19 @@
     Options +FollowSymLinks
     RewriteEngine on
     
-    RewriteCond %{HTTPS} !=on
-    RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+#    RewriteCond %{HTTPS} !=on
+#    RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 
     # Send request via index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php/$1 [L]
 
+</IfModule>
+
+<IfModule mod_php5.c>
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
+<IfModule !mod_php5.c>
+    RewriteRule ^(.*)$ index.php?/$1 [L]
 </IfModule>

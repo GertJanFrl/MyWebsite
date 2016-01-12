@@ -18,6 +18,7 @@ class System extends Admin_Controller {
 
             // Data into variables
             $this->data['system']['web_title']                      = $this->system_m->get_value('web_title')[0]['value'];
+            $this->data['system']['web_title_slogan']               = $this->system_m->get_value('web_title_slogan')[0]['value'];
             $this->data['system']['social_facebook']                = $this->system_m->get_value('social_facebook')[0]['value'];
             $this->data['system']['social_twitter']                 = $this->system_m->get_value('social_twitter')[0]['value'];
             $this->data['system']['social_googleplus']              = $this->system_m->get_value('social_googleplus')[0]['value'];
@@ -44,11 +45,12 @@ class System extends Admin_Controller {
 
             // Process the form
             if ($this->form_validation->run() == TRUE) {
-                $this->system_m->update_value_system($_POST['web_title']);
+                $this->system_m->update_value_system($_POST['web_title'], $_POST['web_title_slogan']);
                 $this->system_m->update_value_social($_POST['social_facebook'], $_POST['social_twitter'], $_POST['social_googleplus'], $_POST['social_linkedin']);
                 $this->system_m->update_value_contact($_POST['contact_address'], $_POST['contact_postcode'], $_POST['contact_phone'], $_POST['contact_email']);
                 $this->system_m->update_value_smtp($_POST['smtp_server'], $_POST['smtp_port'], $_POST['smtp_email'], $_POST['smtp_password']);
                 $this->system_m->update_value_supportwidget($_POST['supportwidget_openingstijden'], $_POST['supportwidget_phone'], $_POST['supportwidget_email'], $_POST['supportwidget_website']);
+                $this->system_m->log_event('system', 0, 'edit');
                 redirect('system/index/success');
             }
         	
@@ -70,16 +72,18 @@ class System extends Admin_Controller {
 
             $this->data['article_checked'] = (in_multiarray('article', $this->data['modules_enabled']) ? 'TRUE' : '');
             $this->data['page_checked'] = (in_multiarray('page', $this->data['modules_enabled']) ? 'TRUE' : '');
-            $this->data['media_checked'] = (in_multiarray('media', $this->data['modules_enabled']) ? 'TRUE' : '');
-            $this->data['slideshow_checked'] = (in_multiarray('slideshow', $this->data['modules_enabled']) ? 'TRUE' : '');
+//            $this->data['media_checked'] = (in_multiarray('media', $this->data['modules_enabled']) ? 'TRUE' : '');
+//            $this->data['slideshow_checked'] = (in_multiarray('slideshow', $this->data['modules_enabled']) ? 'TRUE' : '');
             $this->data['portfolio_checked'] = (in_multiarray('portfolio', $this->data['modules_enabled']) ? 'TRUE' : '');
+            $this->data['portfolio-cat_checked'] = (in_multiarray('portfolio-cat', $this->data['modules_enabled']) ? 'TRUE' : '');
             $this->data['diensten_checked'] = (in_multiarray('diensten', $this->data['modules_enabled']) ? 'TRUE' : '');
             
             $this->data['modules'] = array( 'article' => array('Blog', $this->data['article_checked'])
                                             , 'page' => array('Pagina\'s', $this->data['page_checked'])
                                             // , 'media' => array('Media bibliotheek', $this->data['media_checked'])
-                                            , 'slideshow' => array('Slideshow', $this->data['slideshow_checked'])
+//                                            , 'slideshow' => array('Slideshow', $this->data['slideshow_checked'])
                                             , 'portfolio' => array('Portfolio', $this->data['portfolio_checked'])
+                                            , 'portfolio-cat' => array('Portfolio categorieën', $this->data['portfolio-cat_checked'])
                                             , 'diensten' => array('Diensten', $this->data['diensten_checked'])
                                            );
 
@@ -93,6 +97,7 @@ class System extends Admin_Controller {
                 foreach ($this->data['modules'] as $key => $empty) {
                     $this->system_m->update_modules($key, (!isset($_POST[$key]) ? '0' : '1'));
                 }
+                $this->system_m->log_event('system', 1, 'edit');
                 redirect('system/modules/success/');
             }
 
@@ -102,6 +107,23 @@ class System extends Admin_Controller {
             $this->data['pagetitle'] = 'Geen toegang';
             $this->data['subview'] = 'components/rights';
         }
+        $this->load->view('_layout_main', $this->data);
+    }
+
+    public function logs () {
+        $this->data['currentpage'] = 'logs';
+        $this->data['pagetitle'] = 'Alle logs';
+
+        // Fetch all pages
+        $this->data['logs_system'] = $this->system_m->get_logs('system');
+        $this->data['logs_article'] = $this->system_m->get_logs('article');
+        $this->data['logs_page'] = $this->system_m->get_logs('page');
+        $this->data['logs_portfolio'] = $this->system_m->get_logs('portfolio');
+        $this->data['logs_user'] = $this->system_m->get_logs('user');
+        $this->data['logs_login'] = $this->system_m->get_logs('login');
+
+        // Load view
+        $this->data['subview'] = 'system/logs';
         $this->load->view('_layout_main', $this->data);
     }
 }

@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /*Global classes*/
-html,body                                                   {background-color: #F1F1F1; display: table; height: 100%; width: 100%; color: #606060; font-family: "Open Sans",sans-serif;}
+html,body                                                   {background-color: #F5F4F4; display: table; height: 100%; width: 100%; color: #606060; font-family: "Open Sans",sans-serif;}
 body                                                        {overflow-x:hidden;}
 h1                                                          {}
 h2                                                          {}
@@ -68,13 +68,19 @@ div#page.nav-narrow                                            {left:0; }
 
 div#page table tbody.disabled td.icon-sort                     {font-size: 0px;}
 
-div#page .block                                                {position: relative; min-width: 255px; border: 1px solid #E5E5E5; -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04); background: #FFF; margin-bottom: 20px;}
-div#page .block h3.title                                       {margin: 0; border-bottom: 1px solid #EEE; font-weight: bold; color: #222;}
+div#page .nav-tabs                                             {border-bottom: 0px solid white;}
+div#page .nav-tabs>li                                          {margin-bottom: -2px;}
+div#page .nav-tabs>li a                                        {color: gray;}
+div#page .nav-tabs>li>a:hover                                  {border: 1px solid #E5E5E5;}
+div#page .nav-tabs>li.active>a                                 {background-color: #eee; border-color: #E5E5E5; border-bottom: 0; z-index: 2;}
+div#page .block                                                {position: relative; min-width: 255px; border: 1px solid #E5E5E5; -webkit-box-shadow: 0 0 15px 0 rgba(37,49,51,0.10); -moz-box-shadow: 0 0 15px 0 rgba(37,49,51,0.10); box-shadow: 0 0 15px 0 rgba(37,49,51,0.10); background: #FFF; margin-bottom: 20px;}
+div#page .block h3.title                                       {margin: 0; border-bottom: 1px solid #EEE; font-weight: bold; color: #222; background: #eee;}
 div#page .block h3.title span                                  {font-size: 15px; padding: 8px 12px; margin: 0; line-height: 1.4; display: block;}
 div#page .block h3.title a                                     {float: right; font-size: 13px; padding: 8px 12px; margin: 0; line-height: 1.4; display: block;}
 div#page .block div.content                                    {padding: 15px; font-size: 13px;}
 div#page .block div.content ul                                 {list-style: none; padding: 0; margin: 0;}
 div#page .block div.content table.table tr td span             {opacity: 0;}
+div#page .block div.content table.table tr td span[data-label] {opacity: 1;}
 div#page .block div.content table.table tr:hover td span       {opacity: 1;}
 div#page .block#dashboard_gertlily_support .inside             {margin: 0;}
 div#page .block#dashboard_gertlily_support p.sub               {padding: 5px 0 15px; font-weight: 600; left: 14px; letter-spacing: 1px; position: absolute; text-transform: uppercase; top: -17px;}

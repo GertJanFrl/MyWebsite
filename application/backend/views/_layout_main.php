@@ -10,7 +10,7 @@
                 Hallo, <a href="#" title="<?php echo $this->session->userdata('name'); ?>"><?php echo $this->session->userdata('name'); ?></a>
             </div>
 
-            <div class="user-info"><a href="/">
+            <div class="user-info hidden-xs"><a href="/">
                 Bekijk de homepagina
             </a></div>
         </div>
@@ -36,6 +36,11 @@
                             <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'article' && $this->data['currentsubpage'] == 'overview' ? ' class="active"' : '') ?>>
                                 <a href="/_admin/article/" title="Blog: Alle berichten">
                                     Alle berichten
+                                </a>
+                            </li>
+                            <li<?php echo (!empty($this->data['currentsubpage']) && $this->data['currentpage'] == 'article' && $this->data['currentsubpage'] == 'trash' ? ' class="active"' : '') ?>>
+                                <a href="/_admin/article/trash/" title="Blog: Prullenbak">
+                                    Prullenbak
                                 </a>
                             </li>
                             <li<?php echo (!empty($this->data['currentsubpage']) && $this->data['currentpage'] == 'article' && $this->data['currentsubpage'] == 'nieuw' ? ' class="active"' : '') ?>>
@@ -99,9 +104,29 @@
                             </li>
                         </ul>
                     </li>
-                    <?php 
+                    <?php if(in_multiarray('portfolio-cat', $this->data['modules_enabled'])): ?>
+                    <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'portfolio_cat' ? ' class="active"' : '') ?>>
+                        <a href="/_admin/portfolio/categories/" title="Portfolio">
+                            <span>Portfolio categorieën</span>
+                            <i class="fa fa-paint-brush"></i>
+                        </a>
+                        <ul>
+                            <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'portfolio_cat' && $this->data['currentsubpage'] == 'overview' ? ' class="active"' : '') ?>>
+                                <a href="/_admin/portfolio/categories/" title="Alle categorieën">
+                                    Alle categorieën
+                                </a>
+                            </li>
+                            <li<?php echo (!empty($this->data['currentsubpage']) && $this->data['currentpage'] == 'portfolio_cat' && $this->data['currentsubpage'] == 'nieuw' ? ' class="active"' : '') ?>>
+                                <a href="/_admin/portfolio/categories_edit/" title="Nieuwe categorie">
+                                    Nieuwe categorie
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <?php
+                    endif;
                 }
-                if(in_multiarray('diensten', $this->data['modules_enabled'])) { 
+                if(in_multiarray('diensten', $this->data['modules_enabled'])) {
                     ?>
                     <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'diensten' ? ' class="active"' : '') ?>>
                         <a href="/_admin/diensten/" title="Diensten">
@@ -169,32 +194,38 @@
             </ul>
             <ul>
                 <?php if($this->session->userdata('rights') >= 2) { ?>
-                <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'user' ? ' class="active"' : '') ?>>
-                    <a href="/_admin/user/" title="Gebruikers">
-                        <span>Gebruikers</span>
-                        <i class="fa fa-users"></i>
-                    </a>
-                </li>
+                    <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'user' ? ' class="active"' : '') ?>>
+                        <a href="/_admin/user/" title="Gebruikers">
+                            <span>Gebruikers</span>
+                            <i class="fa fa-users"></i>
+                        </a>
+                    </li>
+                    <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'logs' ? ' class="active"' : '') ?>>
+                        <a href="/_admin/system/logs/" title="Logboek">
+                            <span>CMS Logboek</span>
+                            <i class="fa fa-book"></i>
+                        </a>
+                    </li>
                 <?php } ?>
                 <?php if($this->session->userdata('rights') >= 3) { ?>
-                <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'system' ? ' class="active"' : '') ?>>
-                    <a href="/_admin/system/" title="Voorkeuren">
-                        <span>Voorkeuren</span>
-                        <i class="fa fa-cogs"></i>
-                    </a>
-                    <ul>
-                        <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'system' && $this->data['currentsubpage'] == 'general' ? ' class="active"' : '') ?>>
-                            <a href="/_admin/system/" title="Voorkeuren: Algemeen">
-                                Algemeen
-                            </a>
-                        </li>
-                        <li<?php echo (!empty($this->data['currentsubpage']) && $this->data['currentpage'] == 'system' && $this->data['currentsubpage'] == 'modules' ? ' class="active"' : '') ?>>
-                            <a href="/_admin/system/modules/" title="Voorkeuren: Modules">
-                                Modules
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                    <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'system' ? ' class="active"' : '') ?>>
+                        <a href="/_admin/system/" title="Voorkeuren">
+                            <span>Voorkeuren</span>
+                            <i class="fa fa-cogs"></i>
+                        </a>
+                        <ul>
+                            <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'system' && $this->data['currentsubpage'] == 'general' ? ' class="active"' : '') ?>>
+                                <a href="/_admin/system/" title="Voorkeuren: Algemeen">
+                                    Algemeen
+                                </a>
+                            </li>
+                            <li<?php echo (!empty($this->data['currentsubpage']) && $this->data['currentpage'] == 'system' && $this->data['currentsubpage'] == 'modules' ? ' class="active"' : '') ?>>
+                                <a href="/_admin/system/modules/" title="Voorkeuren: Modules">
+                                    Modules
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 <?php } ?>
                 <li<?php echo (!empty($this->data['currentpage']) && $this->data['currentpage'] == 'logout' ? ' class="active"' : '') ?>>
                     <a href="/_admin/user/logout/" title="">

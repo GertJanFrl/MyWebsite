@@ -19,9 +19,9 @@
 					<tr>
 						<td>
 							<b><?php echo anchor('/article/edit/' . $article->id, $article->title); ?></b> <br />
-							<span><?php echo btn_edit('/article/edit/' . $article->id); ?> | <?php echo btn_delete('/article/delete/' . $article->id); ?> | <a>Bekijk bericht</a></span>
+							<span><?php echo btn_edit('/article/edit/' . $article->id); ?> | <?php echo btn_delete('/article/trash/' . $article->id); ?> | <a>Bekijk bericht</a></span>
 						</td>
-						<td><?php echo $this->user_m->get_user($article->author)[0]['name']; ?></td>
+						<td><?php echo (!empty($this->user_m->get_user($article->author)) ? $this->user_m->get_user($article->author)[0]['name'] : '<s>Onbekend</s>'); ?></td>
 						<td><?php echo strftime("%d %B %Y", strtotime($article->pubdate)); ?></td>
 					</tr>
 				<?php endforeach; ?>

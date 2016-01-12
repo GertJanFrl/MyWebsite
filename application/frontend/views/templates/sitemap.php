@@ -56,6 +56,7 @@
                                     <li>Geen resultaten gevonden.</li>
                                 <?php endif; ?> 
                                 </ul>
+                                <div class="clear"></div>
                             </div>
                     </div>
 

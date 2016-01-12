@@ -43,11 +43,21 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['sitemap'] = 'page/sitemap';
 $route['sitemap.xml'] = 'page/sitemap_xml';
+$route['crossdomain.xml'] = 'page/crossdomain_xml';
 $route['robots.txt'] = 'page/robots';
+$route['articles.xml'] = 'page/articles_xml';
 
 $route['portfolio/(:num)'] = "portfolio/index/$1";
 $route['portfolio/(:any)'] = "portfolio/item/$1";
 $route['portfolio'] = "portfolio/index";
+
+$route['agenda/(:num)/(:num)'] = "agenda/month/$1/$2";
+$route['agenda/(:any)'] = "agenda/item/$1";
+$route['agenda'] = "agenda/index";
+
+$route['nieuws/(:num)'] = "article/index/$1";
+$route['nieuws/(:any)'] = "article/item/$1";
+$route['nieuws'] = "article/index";
 
 $route['diensten/(:any)'] = "diensten/$1";
 $route['diensten'] = "diensten/index";

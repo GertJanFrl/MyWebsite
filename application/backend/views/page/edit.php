@@ -3,7 +3,7 @@
 <div class="row">
 	<div class="col-md-9">
 		<?php
-        if($this->session->flashdata('success') !== FALSE) {
+        if($this->session->flashdata('success')) {
 			echo '<div class="alert alert-success">Uw wijzigen zijn opgeslagen</div>';
 		}
 		?>
@@ -16,10 +16,7 @@
 				<?php echo form_input('title', set_value('title', $page->title), 'class="form-control"'); ?><br />
                 <br />
                 <label for="body">Content</label> <br />
-                <?php echo form_textarea('body', set_value('body', $page->body), 'class="ckeditor form-control"'); ?><br />
-                <br />
-                <label for="body_sidebar">Sidebar</label> <br />
-                <?php echo form_textarea('body_sidebar', set_value('body_sidebar', (!empty($page->body_sidebar) ? $page->body_sidebar : '')), 'class="ckeditor form-control"'); ?>
+                <?php echo form_textarea('body', $page->body, 'class="ckeditor form-control"'); ?><br />
 			</div>
 		</div>
 	</div>

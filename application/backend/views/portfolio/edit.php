@@ -3,7 +3,7 @@
 <div class="row">
 	<div class="col-md-9">
 		<?php
-        if($this->session->flashdata('success') !== FALSE) {
+        if($this->session->flashdata('success')) {
 			echo '<div class="alert alert-success">Uw wijzigen zijn opgeslagen</div>';
 		}
 		?>
@@ -16,7 +16,47 @@
 				<?php echo form_input('title', set_value('title', $item->title), 'class="form-control"'); ?><br />
 				<br />
 				<label for="body">Content</label> <br />
-				<?php echo form_textarea('body', set_value('body', $item->body), 'class="ckeditor form-control"'); ?>
+				<?php echo form_textarea('body', $item->body, 'class="ckeditor form-control"'); ?>
+			</div>
+		</div>
+
+		<?php if(in_multiarray('portfolio-cat', $this->data['modules_enabled'])): ?><div class="block">
+			<h3 class="title">
+				<span>Categorie</span>
+			</h3>
+			<div class="content">
+				<label for="categorie">Categorie</label> <br />
+				<select name="categorie" class="form-control simple_select1">
+					<?php
+					foreach ($categories as $value) {
+						echo '<option value="' . $value['id'] . '"' . ($item->categorie == $value['id'] ? ' selected' : '') . '>' . $value['title'] . '</option>';
+					}
+					?>
+				</select>
+			</div>
+		</div><?php endif; ?>
+
+		<div class="block">
+			<h3 class="title"><span>Gallerij</span></h3>
+			<div class="content">
+				<div class="row">
+				<?php
+				foreach($item->images as $image) {
+					echo '
+                            <div class="col-md-3 col-sm-6">
+                                <div class="block">
+                                    <a class="fancybox" href="/img/uploads/portfolio/gallery/' . $image['image'] . '" data-fancybox-group="gallery" title="' .  $item->title . ': ' . $image['title'] . '">
+                                        <img src="/resize/340x240/uploads/portfolio/gallery/' . $image['image'] . '" alt="' . $item->title . ': ' . $image['title'] . '" class="img-responsive">
+                                        <h3 class="title">' . $image['title'] . '</h3>
+                                    </a>
+                                </div>
+                            </div>';
+				}
+				?>
+				</div>
+			</div>
+			<div class="content">
+				<p>Upload nieuwe gallerij foto's</p>
 			</div>
 		</div>
 	</div>

@@ -4,20 +4,21 @@ class Page extends Frontend_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->helper('url');
         $this->load->model('page_m');
         $this->load->model('portfolio_m');
         $this->load->model('zoeken_m');
         $this->load->model('system_m');
+        $this->load->model('article_m');
         $this->load->library('session');
         // $this->output->cache(10);
+        include($_SERVER['DOCUMENT_ROOT'] . '/system/Google/autoload.php');
     }
 
     public function index() {
         if(isset($_GET['q']) && !empty($_GET['q']))
             redirect(base_url() . 'zoeken/' . strtolower($_GET['q']));
 
-        // Fetch the page template 
+        // Fetch the page template
         $this->data['page'] = ($this->uri->segment(1) == 'zoeken' ? 'zoeken' : $this->page_m->get_by(array('url' => (string) $this->uri->segment(1)), TRUE));
     	if(count($this->data['page']) > 0) {
 
@@ -43,6 +44,8 @@ class Page extends Frontend_Controller {
                 add_meta_title((!empty($this->data['page']->meta_title) ? $this->data['page']->meta_title : $this->data['page']->title), $this->data['subview']);
                 add_meta_description((!empty($this->data['page']->meta_description) ? $this->data['page']->meta_description : substr(strip_tags($this->data['page']->body), 0, 160)));
             }
+
+            $this->data['meta_image'] = 'resize/300x300/uploads/page/' . $this->data['page']->thumbnail;
 
             ($this->data['page']->url == '' ? $this->data['portfolio'] = $this->portfolio_m->getLast(4) : '');
 
@@ -100,9 +103,40 @@ class Page extends Frontend_Controller {
                 }
             }
 
+            if ($this->data['subview'] == 'pastores')
+            {
+                $this->db->limit(2);
+                $this->db->order_by('id', 'DESC');
+                $this->db->where('active', '1');
+                $this->data['articles'] = $this->article_m->get();
+
+                $this->data['subpages'] = $this->page_m->get_children($this->data['page']->id);
+            }
+            else
+            {
+                $this->db->limit(5);
+                $this->db->order_by('id', 'DESC');
+                $this->db->where('active', '1');
+                $this->data['articles'] = $this->article_m->get();
+            }
+
+            if ($this->data['subview'] == 'home')
+            {
+                $this->db->limit(4);
+                $this->db->order_by('id', 'DESC');
+                $this->db->where('id = "10" OR id = "11" OR id = "12" OR id = "8"');
+                $this->data['blocks'] = $this->page_m->get();
+            }
+
             $this->load->view('_main_layout', $this->data);
         } else {
             $this->output->set_status_header('404');
+
+            // Sidebar nieuwsberichten
+            $this->db->limit(5);
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('active', '1');
+            $this->data['articles'] = $this->article_m->get();
 
             add_meta_title('Pagina niet gevonden', '');
             add_meta_description('Pagina niet gevonden');
@@ -144,6 +178,13 @@ class Page extends Frontend_Controller {
                 add_meta_description((!empty($this->data['page']->meta_description) ? $this->data['page']->meta_description : substr(strip_tags($this->data['page']->body), 0, 160)));
             }
 
+            $this->data['meta_image'] = 'resize/300x300/uploads/page/' . $this->data['page']->thumbnail;
+
+            $this->db->limit(5);
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('active', '1');
+            $this->data['articles'] = $this->article_m->get();
+
             $this->data['page']->templatepath = $_SERVER['DOCUMENT_ROOT'] . '/application/frontend/views/templates/' . $this->data['subview'] . '.php';
             if (!file_exists($this->data['page']->templatepath)) {
                 $this->data['subview'] = 'page';
@@ -151,6 +192,12 @@ class Page extends Frontend_Controller {
             $this->load->view('_main_layout', $this->data);
         } else {
             $this->output->set_status_header('404');
+
+            // Sidebar nieuwsberichten
+            $this->db->limit(5);
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('active', '1');
+            $this->data['articles'] = $this->article_m->get();
 
             add_meta_title('Pagina niet gevonden', '');
             add_meta_description('Pagina niet gevonden');
@@ -165,9 +212,15 @@ class Page extends Frontend_Controller {
         // if($this->uri->segment(1) != '404')
         //     redirect('404');
 
+        // Sidebar nieuwsberichten
+        $this->db->limit(5);
+        $this->db->order_by('id', 'DESC');
+        $this->db->where('active', '1');
+        $this->data['articles'] = $this->article_m->get();
+
         add_meta_title('Pagina niet gevonden', '');
         add_meta_description('Pagina niet gevonden');
-        
+
         $this->data['subview'] = 'error/404';
         $this->load->view('_main_layout', $this->data);
     }
@@ -191,6 +244,12 @@ class Page extends Frontend_Controller {
         } else {
             $this->output->set_status_header('404');
 
+            // Sidebar nieuwsberichten
+            $this->db->limit(5);
+            $this->db->order_by('id', 'DESC');
+            $this->db->where('active', '1');
+            $this->data['articles'] = $this->article_m->get();
+
             add_meta_title('Pagina niet gevonden', '');
             add_meta_description('Pagina niet gevonden');
             
@@ -212,6 +271,22 @@ class Page extends Frontend_Controller {
 
     public function robots() {
         $this->data['subview'] = 'robots';
+        $this->load->view('_main_extra', $this->data);
+    }
+
+    public function crossdomain_xml() {
+        $this->data['subview'] = 'crossdomain';
+        $this->load->view('_main_extra', $this->data);
+    }
+
+    public function articles_xml() {
+        $this->data['page'] = $this->page_m->get_by(array('url' => (string) ''), TRUE);
+
+        $this->db->where('active', '1');
+        $this->db->order_by('id', 'DESC');
+        $this->data['articles'] = $this->article_m->get();
+
+        $this->data['subview'] = 'articles_xml';
         $this->load->view('_main_extra', $this->data);
     }
 }

@@ -19,7 +19,7 @@
 							<b><?php echo anchor('/_admin/portfolio/edit/' . $item->id, $item->title); ?></b> <br />
 							<span>
 								- <a href="/_admin/portfolio/index/restore/<?php echo $item->id; ?>/">Pagina herstellen</a><br />
-								- <a href="/_admin/portfolio/trash/<?php echo $item->id; ?>/page/"><span style="color: #A00;">Permanent verwijderen <small>(Inclusief sub-pagina's)</small></span></a>
+								- <a href="/_admin/portfolio/trash/<?php echo $item->id; ?>/item/"><span style="color: #A00;">Permanent verwijderen <small>(Inclusief sub-pagina's)</small></span></a>
 							</span>
 						</td>
 						<td>

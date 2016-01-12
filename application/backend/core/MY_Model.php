@@ -35,9 +35,9 @@ class MY_Model extends CI_Model {
 			$method = 'result';
 		}
 		
-		if (!count($this->db->ar_orderby)) {
+		//if (!count($this->db->_order_by)) {
 			$this->db->order_by($this->_order_by);
-		}
+		//}
 		if($sub == NULL) {
 			return $this->db->get($this->_table_name)->$method();
 		} else {
@@ -55,6 +55,7 @@ class MY_Model extends CI_Model {
 		
 		// Insert
 		if ($id === NULL) {
+			$data['active'] = '1';
 			!isset($data[$this->_primary_key]) || $data[$this->_primary_key] = NULL;
 			$this->db->set($data);
 			if($sub === NULL) {
@@ -63,7 +64,6 @@ class MY_Model extends CI_Model {
 				$this->db->insert($this->_table_name_sub);
 			}
 			$id = $this->db->insert_id();
-			$data['active'] = '1';
 		}
 		// Update
 		else {

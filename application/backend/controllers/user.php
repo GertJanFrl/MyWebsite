@@ -35,14 +35,35 @@ class User extends Admin_Controller {
 			
 			// Process the form
 			if ($this->form_validation->run() == TRUE) {
-				if(!empty($_POST['password'])) {
+				if($this->session->userdata('id') == $id)
+				{
+					if(!empty($_POST['password']))
+					{
+						$data = $this->user_m->array_from_post(array('name', 'email', 'tel', 'password'));
+						$data['password'] = $this->user_m->hash($data['password']);
+					}
+					else
+					{
+						$data = $this->user_m->array_from_post(array('name', 'email', 'tel'));
+					}
+				}
+				else if(!empty($_POST['password']))
+				{
 					$data = $this->user_m->array_from_post(array('name', 'email', 'tel', 'password', 'rights'));
 					$data['password'] = $this->user_m->hash($data['password']);
-				} else {
+				}
+				else
+				{
 					$data = $this->user_m->array_from_post(array('name', 'email', 'tel', 'rights'));
 				}
-				$this->user_m->saveUser($data, $id);
+				$save = $this->user_m->saveUser($data, $id);
                 $this->session->set_flashdata('success', 'success');
+
+				if ($id)
+					$this->system_m->log_event('user', $id, 'edit');
+				else
+					$this->system_m->log_event('user', $save, 'add');
+
 				redirect('user');
 			}
 			
@@ -58,6 +79,7 @@ class User extends Admin_Controller {
 	public function delete ($id) {
         if($this->session->userdata('rights') >= 2) {
 			$this->user_m->delete($id);
+			$this->system_m->log_event('user', $id, 'delete');
 			redirect('user');
 		} else {
             $this->data['pagetitle'] = 'Geen toegang';
@@ -68,8 +90,7 @@ class User extends Admin_Controller {
 
 	public function login () {
 		// Redirect a user if he's already logged in
-		$dashboard = 'dashboard';
-		$this->user_m->loggedin() == FALSE || redirect($dashboard);
+		$this->user_m->loggedin() == FALSE || ($this->system_m->log_event('login', 0, 'login') && redirect('dashboard'));
 		
 		// Set form
 		$rules = $this->user_m->rules;
@@ -79,9 +100,10 @@ class User extends Admin_Controller {
 		if ($this->form_validation->run() == TRUE) {
 			// We can login and redirect
 			if ($this->user_m->login() == TRUE) {
-				redirect($dashboard);
+				$this->system_m->log_event('login', 0, 'login');
+				redirect('dashboard');
 			} else {
-				$this->session->set_flashdata('error', 'That email/password combination does not exist');
+				$this->session->set_flashdata('error', 'Verkeerde gegevens ingevuld');
 				redirect('user/login', 'refresh');
 			}
 		}
@@ -92,6 +114,7 @@ class User extends Admin_Controller {
 	}
 
 	public function logout () {
+		$this->system_m->log_event('login', 0, 'logout');
 		$this->user_m->logout();
 		redirect('user/login');
 	}

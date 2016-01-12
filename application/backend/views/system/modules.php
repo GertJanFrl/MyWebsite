@@ -1,5 +1,5 @@
 <?php echo form_open(); 
-if($this->session->flashdata('success') !== FALSE) { ?>
+if($this->session->flashdata('success')) { ?>
 <div class="row">
 	<div class="col-md-12">
 		<div class="alert alert-success">Uw wijzigen zijn opgeslagen</div>

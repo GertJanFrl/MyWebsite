@@ -24,6 +24,7 @@
                                             <input type="text" name="q" placeholder="Uw zoekterm..." class="form-control" />
                                         <?php echo form_close(); ?> 
                                     </div>
+                                    <div class="clear"></div>
                                 </div>
                             </div>
                         </div>

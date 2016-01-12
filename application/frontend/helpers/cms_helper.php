@@ -42,7 +42,7 @@ function sendMail ($from, $subject, $message, $smtp) {
     $content .= '                </tr>';
     $content .= '                <tr>';
     $content .= '                    <td width="10"></td>';
-    $content .= '                    <td colspan="2" ><img src="' . base_url() . 'img/' . strtolower($from['name']) . '.png" alt="" title="" style="display: block" /></td>';
+    $content .= '                    <td colspan="2" ><img src="' . base_url() . 'img/' . dirtitel($from['name']) . '.png" alt="" title="" style="display: block; max-height: 70px;" /></td>';
     $content .= '                </tr>';
     $content .= '                <tr>';
     $content .= '                    <td colspan="3" height="10"></td>';
@@ -76,10 +76,24 @@ function sendMail ($from, $subject, $message, $smtp) {
     else
         return 'true';
 }
+function dirtitel($titel, $seperator = '-') {
+    $titel = iconv('utf-8', 'ascii//TRANSLIT', $titel);
+    $titel = str_replace(array('&','@','$'), array(' en ',' at ','dollar'), $titel);
+    $titel = preg_replace('/[^a-z0-9\s]/i' , '' , $titel);
+    $titel = strtolower($titel);
+    $titel = str_replace(' ' , $seperator , $titel);
+    $titel = str_replace($seperator . $seperator, $seperator, $titel);
+
+    if (empty($titel))
+        $titel = 'onbekend';
+
+    return $titel;
+}
 
 function add_meta_title($string, $page) {
     $CI =& get_instance();
     $CI->data['meta_title_website']     = $CI->data['meta_title'];
+    $CI->data['meta_title_website_slogan']  = $CI->data['meta_title_slogan'];
     $CI->data['meta_title_og']          = e($string);
     $CI->data['meta_title']             = e($string) . ($page != 'home' ? ' - ' . $CI->data['meta_title'] : '');
 }

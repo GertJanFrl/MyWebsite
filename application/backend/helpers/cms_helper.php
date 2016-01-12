@@ -9,17 +9,32 @@ function in_multiarray($needle, $haystack, $strict = false) {
 }
 
 function dirtitel($titel, $seperator = '-') {
-    $titel = iconv('utf-8', 'ascii//TRANSLIT', $titel);
+	$titel = iconv('utf-8', 'ascii//TRANSLIT', $titel);
 	$titel = str_replace(array('&','@','$'), array(' en ',' at ','dollar'), $titel);
 	$titel = preg_replace('/[^a-z0-9\s]/i' , '' , $titel);
 	$titel = strtolower($titel);
 	$titel = str_replace(' ' , $seperator , $titel);
 	$titel = str_replace($seperator . $seperator, $seperator, $titel);
-	
+
 	if (empty($titel))
-		$titel = 'onbekend';	
-	
+		$titel = 'onbekend';
+
 	return $titel;
+}
+
+function deleteThumbCache($thumbnail, $cache)
+{
+	// Delete the original thumbnail image
+	unlink($_SERVER['DOCUMENT_ROOT'] . "/img/uploads/" . $thumbnail);
+
+	// Delete the cache thumbnail files
+	$files = glob($_SERVER['DOCUMENT_ROOT'] . '/img/cache/' . $cache . '/*');
+	foreach ($files as $file)
+	{
+		is_dir($file) ? removeDirectory($file) : unlink($file);
+	}
+	rmdir($_SERVER['DOCUMENT_ROOT'] . '/img/cache/' . $cache);
+	return;
 }
 
 function add_meta_title ($string) {

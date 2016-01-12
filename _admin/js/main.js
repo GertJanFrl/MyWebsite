@@ -74,13 +74,10 @@ $(document).ready(function() {
     $("#navigation-block").css("height", $("#page").height());
 
     $('.datetimepicker').datetimepicker({
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        },
-        language: 'nl'
+        locale: 'nl',
+        calendarWeeks: true,
+        showClose: true,
+        toolbarPlacement: 'top'
     });
 
     var fixHelper = function(e, ui) {
@@ -141,4 +138,33 @@ $(document).ready(function() {
             }
         });
     }).change();
+
+
+    var sections = ['systeem', 'article', 'pages', 'portfolio', 'user', 'inlog'];
+    $.each(sections, function (index, value) {
+        console.log(value);
+        var ip_addresses = [];
+        // for each span with data-label="ip"
+        $("div.tab-content #" + value + " span[data-label=ip]").each(function() {
+            // push into the array an object containing our query
+            ip_addresses.push({
+                query: $(this).text()
+            });
+        });
+        // convert the array to JSON and send it to the server
+        $.post('http://ip-api.com/batch?fields=country,city,status,message#' + value, JSON.stringify(ip_addresses), function(responseArray) {
+            // for each span with data-label="location"
+            $("div.tab-content #" + value + " span[data-label=location]").each(function() {
+                // remove the first object from the response array and use it
+                var responseObject = responseArray.shift();
+                if (responseObject.status == "success") {
+                    // populate the span with city and country
+                    $(this).text(responseObject.city + ", " + responseObject.country + " ");
+                } else {
+                    $(this).text("error: " + responseObject.message);
+                }
+            });
+        }, 'json');
+    });
+
 });
